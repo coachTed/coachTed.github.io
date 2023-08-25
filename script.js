@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     calendar.render();
 
+    var eventsData = []; // Array to store events
+
     // Add event button click handler
     var addButton = document.getElementById('add-button');
     addButton.addEventListener('click', function() {
@@ -19,32 +21,40 @@ document.addEventListener('DOMContentLoaded', function() {
                 start: eventDate
             });
 
+            // Add the event to the data array
+            eventsData.push({
+                title: eventName,
+                start: eventDate
+            });
+
             // Clear input fields
             document.getElementById('event-name').value = '';
             document.getElementById('event-date').value = '';
-
-            // Save events to CSV (simplified; this would be more complex in a real app)
-            saveEventsToCSV(calendar.getEvents());
         }
+    });
+
+    // Save button click handler
+    var saveButton = document.getElementById('save-button');
+    saveButton.addEventListener('click', function() {
+        // Call the function to save events to CSV
+        saveEventsToCSV(eventsData);
     });
 
     // Function to save events to CSV (simplified)
     function saveEventsToCSV(events) {
         var csvContent = "Date,Event\n";
         events.forEach(function(event) {
-            csvContent += event.startStr + ',' + event.title + '\n';
+            csvContent += event.start + ',' + event.title + '\n';
         });
 
-        // Create a data URI and download the CSV
+        // Create a Blob and save it to data.csv
         var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         var link = document.createElement("a");
-        if (link.download !== undefined) {
-            var url = URL.createObjectURL(blob);
-            link.setAttribute("href", url);
-            link.setAttribute("download", "events.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+        link.setAttribute("href", URL.createObjectURL(blob));
+        link.setAttribute("download", "data.csv");
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 });
