@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+}
+
+#item-list {
+    margin: 20px 0;
+}
+
+#add-item {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+#item-name {
+    padding: 5px;
+    margin-right: 10px;
+}
+
+#add-button {
+    padding: 5px 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
