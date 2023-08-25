@@ -1,22 +1,18 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Retrieve items from local storage
-    let items = JSON.parse(localStorage.getItem("items")) || [];
-
-    // Display items
-    const itemList = document.getElementById("item-list");
-    items.forEach(item => {
-        itemList.innerHTML += `<div>${item}</div>`;
-    });
-
-    // Add item
-    const addButton = document.getElementById("add-button");
-    addButton.addEventListener("click", function() {
-        const itemName = document.getElementById("item-name").value;
-        if (itemName) {
-            items.push(itemName);
-            localStorage.setItem("items", JSON.stringify(items));
-            itemList.innerHTML += `<div>${itemName}</div>`;
-            document.getElementById("item-name").value = "";
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize FullCalendar
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: 'data.csv', // Load data from CSV file
+        eventDidMount: function(info) {
+            // Custom event rendering
+            var tooltip = new Tooltip(info.el, {
+                title: info.event.extendedProps.Activity,
+                placement: 'top',
+                trigger: 'hover',
+                container: 'body'
+            });
         }
     });
+    calendar.render();
 });

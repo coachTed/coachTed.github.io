@@ -1,20 +1,21 @@
+
+
+<!-- Include FullCalendar CSS and JavaScript files -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.1/main.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.1/main.js"></script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Item Tracker</title>
+    <link href="style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.1/main.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.1/main.js"></script>
+    <script src="script.js"></script>
+    <title>Calendar App</title>
 </head>
 <body>
-    <h1>Item Tracker</h1>
-    <div id="item-list">
-        <!-- Items will be displayed here -->
-    </div>
-    <div id="add-item">
-        <input type="text" id="item-name" placeholder="Enter an item">
-        <button id="add-button">Add Item</button>
-    </div>
-    <script src="script.js"></script>
+    <div id="calendar"></div>
 </body>
 </html>
