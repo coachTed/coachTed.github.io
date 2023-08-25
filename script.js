@@ -8,6 +8,67 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var eventsData = []; // Array to store events
 
+    // Function to load events from CSV file
+    function loadEventsFromCSV() {
+        fetch('data.csv') // Adjust the URL as needed
+            .then((response) => response.text())
+            .then((csvText) => {
+                // Parse CSV data into an array of objects
+                eventsData = parseCSV(csvText);
+                // Add events to the calendar
+                calendar.removeAllEvents();
+                calendar.addEventSource(eventsData);
+            })
+            .catch((error) => {
+                console.error('Error loading CSV:', error);
+            });
+    }
+
+    // Function to save events to CSV and commit to the repository
+    function saveEventsToCSVAndCommit() {
+        // Convert eventsData to CSV format
+        let csvContent = 'Date,Event\n';
+        eventsData.forEach((event) => {
+            csvContent += `${event.start},${event.title}\n`;
+        });
+
+        // Write the CSV content to data.csv
+        fetch('data.csv', {
+            method: 'PUT', // Use PUT to update the file
+            body: csvContent,
+            headers: {
+                'Content-Type': 'text/csv'
+            }
+        })
+        .then(() => {
+            console.log('Changes saved to data.csv');
+        })
+        .catch((error) => {
+            console.error('Error saving CSV:', error);
+        });
+    }
+
+    // Parse CSV data into an array of objects
+    function parseCSV(csvText) {
+        const lines = csvText.trim().split('\n');
+        const headers = lines[0].split(',');
+        const eventsData = [];
+        
+        for (let i = 1; i < lines.length; i++) {
+            const data = lines[i].split(',');
+            const event = {};
+            for (let j = 0; j < headers.length; j++) {
+                event[headers[j].trim()] = data[j].trim();
+            }
+            eventsData.push(event);
+        }
+        
+        return eventsData;
+    }
+
+    // Load events from CSV when the page loads
+    loadEventsFromCSV();
+
     // Add event button click handler
     var addButton = document.getElementById('add-button');
     addButton.addEventListener('click', function() {
@@ -30,31 +91,16 @@ document.addEventListener('DOMContentLoaded', function() {
             // Clear input fields
             document.getElementById('event-name').value = '';
             document.getElementById('event-date').value = '';
+
+            // Save events to CSV when adding a new event
+            saveEventsToCSVAndCommit();
         }
     });
 
     // Save button click handler
     var saveButton = document.getElementById('save-button');
     saveButton.addEventListener('click', function() {
-        // Call the function to save events to CSV
-        saveEventsToCSV(eventsData);
+        // Save events to CSV when clicking the "Save Events to CSV" button
+        saveEventsToCSVAndCommit();
     });
-
-    // Function to save events to CSV (simplified)
-    function saveEventsToCSV(events) {
-        var csvContent = "Date,Event\n";
-        events.forEach(function(event) {
-            csvContent += event.start + ',' + event.title + '\n';
-        });
-
-        // Create a Blob and save it to data.csv
-        var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        var link = document.createElement("a");
-        link.setAttribute("href", URL.createObjectURL(blob));
-        link.setAttribute("download", "data.csv");
-        link.style.display = "none";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
 });
